@@ -253,34 +253,25 @@ The other three criteria (source naming, complete chunks, correct source) were s
 
 ## The Improvement
 
-**What I changed:**
+**What I changed:** Reduced `TOP_K` from 5 to 3 in `config.py`.
 
-**Why I picked it:**
-
-<!-- Connect it to a specific diagnosis above in one sentence. If you can't,
-     you picked a fix because it sounded impressive. -->
+**Why I picked it:** The diagnoses showed the correct chunk ranked #1 or #2 for every question, and the distance gap between in-corpus and out-of-corpus results was 0.36 wide. If retrieval is that precise, the 4th and 5th chunks are loosely related noise the model has to ignore — reducing top-k tests whether those extra chunks were necessary or just padding.
 
 ### Run Log — After
 
-<!-- Same format, same five criteria, three runs each.
-     `python run_eval.py --label after` -->
+Produced by: `run_eval.py::main`, top-k: 3, cutoff: 0.6. Full output in `results/run_2026-09-27_2229_after.md`.
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Each chunk reads as a complete thought | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 5. Named source file is the correct one | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
 
 **Did it help?**
 
-<!-- Say plainly whether it did, and how you know. If it made things worse,
-     say that — a change that backfired, honestly reported, earns full credit
-     and is more interesting than one that worked. What matters is that you can
-     tell.
-
-     Milestone 4. -->
+Yes, in the sense that it confirmed the before results were not relying on those extra chunks. All five criteria held at 5/5 across all three runs with only 3 chunks instead of 5. The answers were equally correct and equally well-sourced — the 4th and 5th chunks were not contributing anything. The practical benefit is that the model receives a tighter, less noisy prompt, which reduces the chance of it getting confused by loosely related material on harder corpora. The numbers didn't move because they were already at the ceiling, but the change is still meaningful: it tells me the system's precision is genuine, not propped up by over-retrieval.
 
 ## What's Still Broken
 
