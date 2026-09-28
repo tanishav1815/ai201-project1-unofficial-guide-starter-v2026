@@ -29,53 +29,47 @@
 
 ## Chunking Strategy
 
-**Chunk size:**
-**Overlap:**
+**Chunk size:** paragraph boundaries (blank lines)
+**Overlap:** none
 
-<!-- What about YOUR documents made you pick these numbers? Short posts and
-     long sectioned guides don't want the same chunking, and "800 seemed
-     reasonable" earns nothing. Point at something you noticed when you read
-     the documents in Milestone 1.
+When I read the `campus_life` documents in Milestone 1, I noticed they are short posts averaging 317 characters — far below the 800-character default chunk size. The fallback chunker never split any of them, so 88 documents became exactly 88 chunks, one per document. That's a problem because many posts cover multiple distinct topics in separate paragraphs: one section on the good, one on the bad, one on laundry costs. A question about laundry costs would retrieve the entire document as noise around the one relevant sentence.
 
-     If you changed your mind partway through, say so and say why. That's worth
-     more than pretending you got it right first time.
+The documents are structured with a short title line followed by 1–4 content paragraphs, each separated by a blank line. Splitting on blank lines gives one chunk per thought. I drop any paragraph shorter than 50 characters — the longest title line across all 88 documents is 47 characters, so 50 is a safe threshold that removes headings without touching content.
 
-     Milestone 3. -->
+No overlap is needed: campus_life paragraphs are self-contained. Sentences never run across a blank line, so there is no mid-sentence cut for overlap to repair.
+
+Result: 88 documents → 179 chunks, average 139 characters, shortest 51, longest 373.
 
 ## Sample Chunks
 
-<!-- Five chunks, pasted as text. Label each one and name the file it came from
-     AND the function that produced it — the grader checks your code against
-     what you claim here.
-
-     `python app.py chunks -n 5` prints all three for you. Copy them straight
-     across.
-
-     Milestone 3. -->
-
-**Chunk 1** — source: `` — produced by: ``
+**Chunk 1** — source: `admin_add_drop_deadline.txt#0` — produced by: `chunker.py::split_documents`
 
 ```
+You can add a course through the end of the second week. Dropping is a longer window — through the end of week six — but a drop after week two shows as a W on your transcript. Nothing anywhere on the registrar's site says this plainly, and students find out from each other.
 ```
 
-**Chunk 2** — source: `` — produced by: ``
+**Chunk 2** — source: `course_cs_340_exams.txt#1` — produced by: `chunker.py::split_documents`
 
 ```
+Start the term project in week three, not week eight; everyone learns this the hard way.
 ```
 
-**Chunk 3** — source: `` — produced by: ``
+**Chunk 3** — source: `course_phys_130_workload.txt#1` — produced by: `chunker.py::split_documents`
 
 ```
+It's front-loaded — the first month is heavier than the rest, partly because you're learning the format.
 ```
 
-**Chunk 4** — source: `` — produced by: ``
+**Chunk 4** — source: `health_center.txt#0` — produced by: `chunker.py::split_documents`
 
 ```
+Walk-in hours are 8am to 11am; everything after that is by appointment and appointments run about a week out. If something is urgent, go at 8am and wait rather than booking.
 ```
 
-**Chunk 5** — source: `` — produced by: ``
+**Chunk 5** — source: `housing_morrow_house.txt#1` — produced by: `chunker.py::split_documents`
 
 ```
+The good: cheapest housing tier by about $900 a year, and the singles are real singles.
 ```
 
 ## Sample Answer

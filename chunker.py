@@ -22,6 +22,7 @@ to it, write down what you saw, and move on. That's a real observation about
 your pipeline, not giving up.
 """
 
+import re
 from dataclasses import dataclass
 
 import config
@@ -82,22 +83,57 @@ def fallback_split(
 
 def split_documents(documents: list[Document]) -> list[Chunk]:
     """
-    Split documents into chunks. ⚠️ REPLACE THE BODY OF THIS IN MILESTONE 3.
+    Split documents into chunks on paragraph boundaries.
 
-    Right now it just calls the fallback. That is the plain, generic behaviour
-    the brief is talking about.
+    campus_life documents are short posts (avg 317 chars) where each paragraph
+    holds one distinct thought: general dorm info, the good, the bad, laundry
+    costs, hours, etc. The 800-character fallback never splits them, so every
+    document becomes one chunk — useful information gets buried in noise when
+    a document covers two unrelated topics.
 
-    When you write your own strategy, set `produced_by` to
-    "chunker.py::split_documents" so your README's Sample Chunks section names
-    the right function. `app.py chunks` prints that string for you.
+    Strategy: split on blank lines (paragraph breaks), then drop any paragraph
+    shorter than 50 characters. Everything shorter is a document title
+    ("On the housing lottery", "Kestrel Commons") — the longest title across
+    all 88 documents is 47 characters, so 50 is a safe threshold. Content
+    paragraphs start at 58 characters in this corpus.
 
-    Things worth thinking about before you write any code:
-      - Are your documents short posts or long guides?
-      - Is the useful information in one sentence, or spread over a paragraph?
-      - Would splitting on paragraph breaks keep more thoughts intact than
-        splitting on a character count?
+    No overlap is needed: campus_life paragraphs are self-contained thoughts.
+    A sentence never runs across a blank line, so there is no mid-sentence cut
+    for overlap to repair.
     """
-    return fallback_split(documents)
+    MIN_CHARS = 50  # anything shorter is a heading with no answerable content
+
+    chunks: list[Chunk] = []
+    for doc in documents:
+        paragraphs = re.split(r"\n\s*\n", doc.text.strip())
+        index = 0
+        for para in paragraphs:
+            piece = para.strip()
+            if len(piece) < MIN_CHARS:
+                continue
+            chunks.append(
+                Chunk(
+                    text=piece,
+                    source=doc.source,
+                    index=index,
+                    produced_by="chunker.py::split_documents",
+                )
+            )
+            index += 1
+
+        # Safety net: if the whole document was shorter than MIN_CHARS
+        # (shouldn't happen in campus_life, but keeps the pipeline honest).
+        if index == 0 and doc.text.strip():
+            chunks.append(
+                Chunk(
+                    text=doc.text.strip(),
+                    source=doc.source,
+                    index=0,
+                    produced_by="chunker.py::split_documents",
+                )
+            )
+
+    return chunks
 
 
 def describe(chunks: list[Chunk]) -> str:
