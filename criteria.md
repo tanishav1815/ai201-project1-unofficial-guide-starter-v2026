@@ -22,9 +22,7 @@ pipeline earns credit; *"80% seemed reasonable"* does not.
 For at least 4 of my 5 test questions, the retrieved chunks include one that
 contains the answer.
 
-**Why this target:**
-<!-- e.g. "One of my questions is about a topic only two documents mention, so
-     I expect that one to be hard." -->
+**Why this target:** The `campus_life` corpus stores each fact in a single short document — one post per topic. If the right document is anywhere in the top-5 results, the answer is there. I allow one miss because my question about the shuttle stop being skipped when the driver is behind is a detail that only appears in one sentence of one document, and a slightly imprecise query could miss it.
 
 ---
 
@@ -32,9 +30,7 @@ contains the answer.
 
 Every answer the system produces names at least one source document.
 
-**Why this target:**
-<!-- Why all five and not four? What about your setup makes that achievable —
-     or what would have to go wrong for it not to be? -->
+**Why this target:** The grounding instruction in `generate.py` explicitly tells the model to name the document it used, and the prompt assembles each chunk with its filename attached (`[from admin_pass_fail_option.txt]`). There is no reason for this to fail unless the model ignores explicit instructions — which is the very thing the instruction is there to prevent. Five of five is achievable; four of five would mean accepting that the model sometimes ignores a direct rule, and I don't want to accept that.
 
 ---
 
@@ -44,54 +40,23 @@ When I ask a question my documents clearly don't cover, the relevance gate
 stops it and the system returns "I don't have enough information about that" —
 in at least 4 of 5 tries.
 
-<!-- The five questions are the ones in `OUT_OF_SCOPE` at the bottom of
-     `questions.py`, and `run_eval.py` puts them through the gate and writes
-     what happened into your run log. Swap them for your own if you'd rather —
-     just keep five of them, or the "4 of 5" above has nothing to be 4 of. -->
-
-**Why this target:**
-<!-- What did your distances look like when you set the cutoff in Milestone 4?
-     Was there a clean gap, or did the two groups overlap? -->
+**Why this target:** The five `OUT_OF_SCOPE` questions (capital of Mongolia, oil changes, the 1994 World Cup, ibuprofen dosage, Rust loops) are completely unrelated to student life. I expect the gate to catch all five, but allow one miss in case one question happens to share vocabulary with a document (e.g. "loop" appearing in a campus transit description). I'll tighten this to 5 of 5 if the distances show a clean gap in Milestone 4.
 
 ---
 
-## 4. Something about your chunks
+## 4. Each chunk reads as a complete thought
 
-<!-- YOU WRITE THIS ONE.
+At least 4 of 5 sampled chunks contain no sentence cut in half at either end — the chunk begins and ends at a natural boundary, and a reader could answer a question from it without needing to read the chunk before or after it.
 
-     How would you know if your chunks were the right size? Name something
-     countable or observable.
-
-     Examples of the right shape — don't copy these, they should come from
-     what you actually saw in Milestone 3:
-       - "At least 4 of 5 sampled chunks read as a complete thought, with no
-          sentence cut in half at either end."
-       - "No chunk is shorter than 200 characters, since anything below that
-          in my corpus turned out to be a heading with no content under it." -->
-
-
-
-**Why this target:**
-
-
+**Why this target:** The `campus_life` documents are 178–549 characters each, and the default chunk size of 800 characters means almost every document becomes exactly one chunk with no mid-sentence cuts. Reading three documents confirmed this: each post is a self-contained thought. I allow one miss for the rare longer document (like `admin_housing_lottery.txt` at ~480 characters) where an overlap might produce a partial repeat. This criterion is what tells me whether my chunking fits the document shape.
 
 ---
 
-## 5. Your choice
+## 5. The named source file is the correct one
 
-<!-- YOU WRITE THIS ONE TOO.
+In at least 4 of 5 answers, the source file the model cites actually contains the answer it gave — not just any file that happened to be retrieved.
 
-     Pick something you actually care about getting right. It could be about
-     speed, about refusals, about a particular kind of question your corpus
-     handles badly, about source attribution being correct rather than merely
-     present — anything, as long as it names a number or an observable
-     outcome. -->
-
-
-
-**Why this target:**
-
-
+**Why this target:** Criterion 2 only checks that *a* source is named. This checks that it is the *right* source. Because `campus_life` stores one fact per file with clear filenames (e.g. `admin_printing_quota.txt`), a grader can open the cited file and confirm the answer is in it. I allow one miss because when multiple files are retrieved (e.g. two housing posts both mentioning laundry), the model may cite a supporting document that contains a related but not primary fact. Four of five is strict enough to catch systematic wrong attribution without penalising a reasonable secondary citation.
 
 ---
 
