@@ -27,6 +27,8 @@
 
      Milestone 5. -->
 
+     This system is a retrieval-augmented guide built on the campus_life corpus — 88 short student-written posts covering academic policies, housing, dining, transit, and course advice. You ask a question in plain English and the system finds the most relevant post, then generates a grounded answer that names exactly which file it came from. It answers things like "How late can I declare pass/fail?", "Do dining dollars roll over?", or "How often does the shuttle run?" — practical facts a new student would need but struggle to find on the registrar's site. Questions outside the corpus (anything not covered by student posts) are caught by a relevance gate and refused rather than answered with a guess.
+
 ## Chunking Strategy
 
 **Chunk size:** paragraph boundaries (blank lines)
@@ -112,9 +114,13 @@ The two groups are completely separated with a large gap. In-corpus questions sc
 
      Milestone 5. -->
 
-**1.**
+     
 
-**2.**
+**1.** I described the structure of the campus_life documents to Claude — short posts averaging 317 characters, each with a title line followed by 1–4 paragraphs. I asked it to write a chunker that splits on blank lines and skips short paragraphs. The first draft used 40 characters as the minimum — I checked the actual documents myself and found the longest title was 47 characters, so I changed the threshold to 50.
+
+
+
+**2.**  After setting up the distance table in the README, I asked Claude to help me phrase the cutoff reasoning. It gave me a generic explanation about "two groups with a gap." I rewrote it to include the actual numbers (0.22–0.46 vs 0.82–0.91) and the specific reason I kept 0.6 — lowering it below 0.5 would have refused the shuttle question.
 
 <!-- ── Stretch features ─────────────────────────────────────────────────────
      Doing one? Say so here BEFORE you start. A feature this README never
