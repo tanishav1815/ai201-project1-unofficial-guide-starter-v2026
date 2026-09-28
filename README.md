@@ -283,9 +283,13 @@ Yes, in the sense that it confirmed the before results were not relying on those
 
      Milestone 5. -->
 
+     Nothing missed any criterion after the fix. The one thing worth noting: the library question retrieves housing noise posts rather than a dedicated library hours document — the answer is correct but the source is indirect. If the corpus grew, this could become a real miss.
+
 ## What I'd Do Differently
 
 <!-- Knowing what you know now — which of your five criteria would you write
      differently, and why?
 
      Milestone 5. -->
+
+I'd write criteria 1 and 3 as 5 of 5 instead of 4 of 5. Both came in at 5/5 every single run — the 4/5 target reflected uncertainty I had before seeing any results, and the corpus structure (one fact per file, clean filenames, huge distance gap) made those misses essentially impossible. A target you can't miss isn't a test.
