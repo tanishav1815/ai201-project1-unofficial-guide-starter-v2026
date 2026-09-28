@@ -149,15 +149,76 @@ The two groups are completely separated with a large gap. In-corpus questions sc
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Each chunk reads as a complete thought | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 5. Named source file is the correct one | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
 
-<!-- Underneath, paste the REAL output for each criterion from one of your
-     runs — the actual text your system produced, not a description of it.
-     Name the file and function that produced it. -->
+Produced by: `run_eval.py::main`, retrieval by `store.py::search`, chunks from `chunker.py::split_documents`. Full output in `results/run_2026-09-27_2219_before.md`.
+
+**Criterion 1 — retrieved chunk contains the answer (run 1):**
+
+Question: How late can I declare a course pass/fail?
+Retrieved: admin_pass_fail_option.txt (distance 0.2238) — chunk contains "as late as week eight" ✓
+
+Question: Do dining dollars roll over at the end of the year?
+Retrieved: admin_dining_dollars.txt (distance 0.2927) — chunk contains "whatever is left in May disappears" ✓
+
+Question: How much free printing does each student get per semester?
+Retrieved: admin_printing_quota.txt (distance 0.2540) — chunk contains "$30 of printing per semester" ✓
+
+Question: How often does the campus shuttle run on weekdays?
+Retrieved: transit_shuttle.txt (distance 0.4624) — chunk contains "every 20 minutes" ✓
+
+Question: When does the library close during the regular term?
+Retrieved: housing_morrow_house_noise.txt (distance 0.3879) — chunk contains "open until 2am during term" ✓
+
+**Criterion 2 — every answer names a source (run 1):**
+
+```
+You can declare a course pass/fail as late as week eight, after you've seen your midterm.
+Source: admin_pass_fail_option.txt
+
+Dining dollars roll over from the autumn semester to the spring semester, but whatever is left in May disappears and does not roll over to the following autumn (admin_dining_dollars.txt).
+
+Each student gets $30 of printing per semester, which is roughly 600 black-and-white pages (admin_printing_quota.txt).
+
+The campus shuttle runs a loop every 20 minutes from 7am to 11pm on weekdays.
+Source: transit_shuttle.txt
+
+The library is open until 2am during term.
+Sources: housing_morrow_house_noise.txt, housing_calder_annexe_noise.txt, housing_tamsin_court_noise.txt, housing_fenwick_court_noise.txt, housing_old_brewhouse_noise.txt
+```
+
+**Criterion 3 — gate stops out-of-corpus questions:**
+
+```
+What is the capital of Mongolia?        best distance 0.864 → refused
+How do I change the oil in a diesel engine?  best distance 0.911 → refused
+Who won the 1994 World Cup?             best distance 0.874 → refused
+What is the recommended dosage of ibuprofen? best distance 0.824 → refused
+How do I write a for loop in Rust?      best distance 0.831 → refused
+```
+
+**Criterion 4 — each chunk reads as a complete thought (run 1, sample):**
+
+```
+[from admin_pass_fail_option.txt]
+Any course outside your major can be taken pass/fail, and — the part nobody mentions —
+you can declare it as late as week eight, after you've seen your midterm. A pass needs
+a C- or better. Two per year, maximum eight across a degree.
+```
+No sentence cut at either end. Self-contained. ✓
+
+**Criterion 5 — named source is the correct one (run 1):**
+
+Every cited file was opened and confirmed to contain the answer given:
+- admin_pass_fail_option.txt → "week eight" ✓
+- admin_dining_dollars.txt → "disappears" ✓
+- admin_printing_quota.txt → "$30" ✓
+- transit_shuttle.txt → "20 minutes" ✓
+- housing_*_noise.txt → "2am during term" ✓
 
 ## Verdicts
 
