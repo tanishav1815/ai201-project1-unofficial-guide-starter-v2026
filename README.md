@@ -74,30 +74,32 @@ The good: cheapest housing tier by about $900 a year, and the singles are real s
 
 ## Sample Answer
 
-<!-- One complete question and answer, pasted as text, with the source line
-     visible. Milestone 4. -->
-
-**Question:**
+**Question:** How late can I declare a course pass/fail?
 
 **Answer:**
 
 ```
+You can declare a course pass/fail as late as week eight, after you've seen your midterm.
+
+Source: admin_pass_fail_option.txt
 ```
 
-**My relevance cutoff:**
+**My relevance cutoff:** 0.6
 
-<!-- The number you set in config.py, and how you got there.
-
-     You ran five questions your corpus covers and the five in OUT_OF_SCOPE
-     that it clearly doesn't, and wrote down the best distance for each. What
-     did those two groups look like? Where was the gap? Put the actual numbers
-     here — the table below wants all ten rows.
-
-     Milestone 4. -->
+The two groups are completely separated with a large gap. In-corpus questions scored 0.22–0.46; out-of-corpus scored 0.82–0.91. The default cutoff of 0.6 sits squarely in that gap — there is no ambiguous zone to worry about. Raising it toward 0.75 would change nothing; lowering it below 0.5 would start refusing the shuttle question (best distance 0.46).
 
 | Question | In corpus? | Best distance |
 |---|---|---|
-|  |  |  |
+| How late can I declare a course pass/fail? | Yes | 0.2238 |
+| Do dining dollars roll over at the end of the year? | Yes | 0.2927 |
+| How much free printing does each student get per semester? | Yes | 0.2540 |
+| How often does the campus shuttle run on weekdays? | Yes | 0.4624 |
+| When does the library close during the regular term? | Yes | 0.3879 |
+| What is the capital of Mongolia? | No | 0.8641 |
+| How do I change the oil in a diesel engine? | No | 0.9106 |
+| Who won the 1994 World Cup? | No | 0.8736 |
+| What is the recommended dosage of ibuprofen for a headache? | No | 0.8243 |
+| How do I write a for loop in Rust? | No | 0.8313 |
 
 ## How I Used AI
 
