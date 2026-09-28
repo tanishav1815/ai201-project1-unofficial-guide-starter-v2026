@@ -241,23 +241,15 @@ Every cited file was opened and confirmed to contain the answer given:
 
 ## Diagnoses
 
-<!-- For each miss: which stage caused it, and how. The stage alone isn't
-     enough — you need the mechanism.
+No misses across any of the three runs.
 
-     Not a diagnosis: "Question 3 didn't work."
-     A diagnosis:     "Question 3 asks about laundry costs. The answer is in
-                       one sentence that got split across two chunks, so
-                       neither chunk on its own contains it."
+That result is honest, but the targets were conservative in two places:
 
-     The five stages: loading → chunking → embedding → retrieval → generation.
+**Criterion 1 (retrieved chunk contains the answer) — target: 4 of 5.** The `campus_life` corpus stores one fact per file with clear filenames, so the right document almost always ranks first. Getting 5 of 5 every run was not surprising given how the corpus is structured. I'd tighten this to 5 of 5 — it reflected uncertainty I had before seeing any results, and the results showed that uncertainty was unwarranted.
 
-     Look for a pattern. If three misses all ask about numbers, that's one
-     problem, not three.
+**Criterion 3 (gate stops out-of-corpus questions) — target: 4 of 5.** The gap between in-corpus distances (0.22–0.46) and out-of-corpus distances (0.82–0.91) is 0.36 wide. There is no ambiguous zone. Allowing one miss was unnecessary — I'd tighten this to 5 of 5 as well.
 
-     Missed nothing? Say so, then say honestly whether your targets were set
-     low, and which one you'd tighten and to what.
-
-     Milestone 3. -->
+The other three criteria (source naming, complete chunks, correct source) were set at 5 of 5 or 4 of 5 and held. Those targets were appropriate.
 
 ## The Improvement
 
